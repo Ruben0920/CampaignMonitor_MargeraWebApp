@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5001/api'; // Your Flask backend URL
+const API_URL = 'http://localhost:5001/api';
 
 export const getSubscribers = async () => {
     const response = await axios.get(`${API_URL}/subscribers`);
@@ -13,6 +13,13 @@ export const addSubscriber = async (subscriberData) => {
 };
 
 export const removeSubscriber = async (email) => {
-    const response = await axios.delete(`<span class="math-inline">\{API\_URL\}/subscribers/</span>{email}`);
+    const response = await axios.delete(`${API_URL}/subscribers`,  {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: { 
+            email: email
+        }
+    });
     return response.data; 
 };

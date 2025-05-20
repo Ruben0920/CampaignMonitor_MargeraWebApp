@@ -17,14 +17,9 @@ function AddSubscriberForm({ onSubscriberAdded, showSuccessMessage }) {
         setIsLoading(true);
         try {
             const newSubscriber = await apiAddSubscriber({ name, email });
-            if (onSubscriberAdded) {
-                onSubscriberAdded(newSubscriber);
-            }
             setName('');
             setEmail('');
-            if (showSuccessMessage) {
-                showSuccessMessage('Subscriber added successfully!');
-            }
+            if (showSuccessMessage) showSuccessMessage('Subscriber added successfully!');
         } catch (err) {
             const errorMessage = err.response?.data?.cm_error?.Message ||
                                  err.response?.data?.message ||

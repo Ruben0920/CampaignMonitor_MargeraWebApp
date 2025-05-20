@@ -4,17 +4,15 @@ import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import ViewSubscribersPage from './pages/ViewSubscribersPage';
 import AddSubscriberPage from './pages/AddSubscriberPage';
-import { XCircle, CheckCircle } from 'lucide-react'; // For notifications
+import { XCircle, CheckCircle } from 'lucide-react';
 
 function App() {
     const [currentPage, setCurrentPage] = useState('home'); // 'home', 'view', 'add'
-    const [notification, setNotification] = useState(null); // { type: 'success' | 'error', message: string }
+    const [notification, setNotification] = useState(null);
 
     useEffect(() => {
         if (notification) {
-            const timer = setTimeout(() => {
-                setNotification(null);
-            }, 5000); // Auto-hide notification after 5 seconds
+            const timer = setTimeout(() => setNotification(null), 5000);
             return () => clearTimeout(timer);
         }
     }, [notification]);
@@ -28,23 +26,21 @@ function App() {
         setNotification(null); // Clear notification on page change
     };
 
-    const handleSubscriberAdded = (newSubscriber) => {
-        console.log("New subscriber added in App:", newSubscriber);
-        showNotification(`Subscriber '${newSubscriber.name || newSubscriber.email}' added successfully!`, 'success');
-        // Optionally navigate to the view page after adding
-        // setCurrentPage('view');
-    };
-
     const renderPage = () => {
         switch (currentPage) {
             case 'home':
-                return <HomePage />;
+                return <HomePage onNavigate={handleNavigate} />;
             case 'view':
-                return <ViewSubscribersPage showSuccessMessage={showNotification} showErrorMessage={(msg) => showNotification(msg, 'error')} />;
+                return <ViewSubscribersPage showSuccessMessage={showNotification} showErrorMessage={msg => showNotification(msg, 'error')} />;
             case 'add':
-                return <AddSubscriberPage onSubscriberAdded={handleSubscriberAdded} showSuccessMessage={showNotification} />;
+                return (
+                    <AddSubscriberPage
+                        showSuccessMessage={showNotification}
+                        onNavigateToView={() => setCurrentPage('view')}
+                    />
+                );
             default:
-                return <HomePage />;
+                return <HomePage onNavigate={handleNavigate} />;
         }
     };
 
@@ -71,7 +67,7 @@ function App() {
                 </div>
             </main>
             <footer className="bg-gray-800 text-white text-center p-6 mt-auto">
-                <p>&copy; {new Date().getFullYear()} Campaign Monitor Manager. Built with React & Flask.</p>
+                <p>Campaign Monitor Manager. Built with React & Flask. Candidate Name: Ruben Goginyan</p>
             </footer>
         </div>
     );

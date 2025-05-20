@@ -1,12 +1,16 @@
 import React from 'react';
 import AddSubscriberForm from '../components/AddSubscriberForm';
 
-function AddSubscriberPage({ onSubscriberAdded, showSuccessMessage }) {
+function AddSubscriberPage({ showSuccessMessage, onNavigateToView }) {
+    const handleSuccess = (msg) => {
+        if (showSuccessMessage) showSuccessMessage(msg);
+        if (onNavigateToView) onNavigateToView(); 
+    };
+
     return (
         <div className="page-container">
             <AddSubscriberForm
-                onSubscriberAdded={onSubscriberAdded}
-                showSuccessMessage={showSuccessMessage}
+                showSuccessMessage={handleSuccess}
             />
         </div>
     );
