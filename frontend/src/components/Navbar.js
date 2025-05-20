@@ -16,7 +16,6 @@ function Navbar({ onNavigate, currentPage }) {
                 <div className="navbar-header">
                     <span className="navbar-title">CM Manager</span>
                 </div>
-                {/* Desktop Menu */}
                 <div className="navbar-links">
                     {navItems.map((item) => (
                         <button

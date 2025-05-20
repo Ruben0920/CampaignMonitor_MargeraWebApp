@@ -11,19 +11,16 @@ export const getSubscribers = async () => {
 export const addSubscriber = async (subscriberData) => {
     let payload;
     if (Array.isArray(subscriberData)) {
-        // For bulk add, wrap the array as per your backend's expectation
         payload = { subscribers: subscriberData };
     } else {
-        // For single add, send the object directly
         payload = subscriberData;
     }
     const response = await axios.post(`${API_URL}/subscribers`, payload);
     return response.data;
 };
 
-// Function for removing a single subscriber (as per your existing setup)
 export const removeSubscriber = async (email) => {
-    const response = await axios.delete(`${API_URL}/subscribers/`, { // Ensure trailing slash if in Flask route
+    const response = await axios.delete(`${API_URL}/subscribers/`, { 
         headers: {
             'Content-Type': 'application/json'
         },
@@ -34,15 +31,13 @@ export const removeSubscriber = async (email) => {
     return response.data;
 };
 
-// Function for bulk removing subscribers
 export const bulkRemoveSubscribers = async (subscribersList) => {
-    // subscribersList should be an array of objects, e.g., [{email: "one@example.com"}, ...]
-    const response = await axios.delete(`${API_URL}/subscribers/`, { // Ensure trailing slash
+    const response = await axios.delete(`${API_URL}/subscribers/`, { 
         headers: {
             'Content-Type': 'application/json'
         },
         data: {
-            subscribers: subscribersList // Backend expects {"subscribers": [...]}
+            subscribers: subscribersList 
         }
     });
     return response.data;

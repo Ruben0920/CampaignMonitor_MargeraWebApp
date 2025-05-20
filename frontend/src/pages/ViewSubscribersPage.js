@@ -1,10 +1,8 @@
-// src/pages/ViewSubscribersPage.js
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
     getSubscribers,
-    // removeSubscriber as apiRemoveSubscriber, // We'll use bulkRemove or a modified single remove
     bulkRemoveSubscribers,
-    addSubscriber as apiAddSubscriber // Can be used for bulk by sending an array
+    addSubscriber as apiAddSubscriber 
 } from '../services/api';
 import { Trash2, AlertCircle, RefreshCw, List, UploadCloud, Download, Users, X } from 'lucide-react';
 
@@ -61,8 +59,7 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
     const handleRemoveSingleSubscriber = async (email, name) => {
         if (!window.confirm(`Are you sure you want to remove ${name} (${email})? This action cannot be undone.`)) return;
         try {
-            // Using bulkRemoveSubscribers for one, or ensure your single remove API is still separate & working
-            await bulkRemoveSubscribers([{ email }]); // Or call a modified removeSubscriber
+            await bulkRemoveSubscribers([{ email }]);
             setSubscribers(prevSubscribers => prevSubscribers.filter(sub => sub.email !== email));
             setSelectedSubscribers(prev => {
                 const newSelected = new Set(prev);
@@ -91,16 +88,12 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
         setIsLoading(true);
         try {
             const response = await bulkRemoveSubscribers(emailsToRemove);
-            // Assuming response.results contains detailed status for each email
-            // And response.message gives an overall status
             if (showSuccessMessage) {
                 showSuccessMessage(response.message || `${emailsToRemove.length} subscribers processed for removal.`);
             }
             
-            // Refetch or filter local state based on detailed response
-            // For simplicity, refetching. A more sophisticated approach would parse response.results
             setSelectedSubscribers(new Set());
-            await loadSubscribers(false); // Reload without showing main loading spinner initially
+            await loadSubscribers(false); 
 
         } catch (err) {
             const apiError = err.response?.data;
@@ -110,7 +103,7 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
             } else if (apiError?.error) {
                  errorMessage = apiError.error;
             }
-            if (apiError?.results) { // If backend sends per-email error details
+            if (apiError?.results) { 
                 const failedEmails = apiError.results.filter(r => r.status === 'error').map(r => r.email);
                 if (failedEmails.length > 0) {
                     errorMessage += ` Errors for: ${failedEmails.join(', ')}`;
@@ -144,7 +137,7 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
         if (!file) return;
 
         setIsImporting(true);
-        setError(''); // Clear previous errors
+        setError('');
 
         const reader = new FileReader();
         reader.onload = async (e) => {
@@ -159,7 +152,7 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
                 setError(missingHeaderMsg);
                 if (showErrorMessage) showErrorMessage(missingHeaderMsg);
                 setIsImporting(false);
-                if(fileInputRef.current) fileInputRef.current.value = ""; // Reset file input
+                if(fileInputRef.current) fileInputRef.current.value = ""; 
                 return;
             }
 
@@ -169,7 +162,7 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
                 if (values.length > Math.max(emailIndex, nameIndex)) {
                     const email = values[emailIndex]?.trim();
                     const name = values[nameIndex]?.trim();
-                    if (email && name) { // Basic validation
+                    if (email && name) { 
                         newSubscribers.push({ email, name });
                     }
                 }
@@ -185,10 +178,9 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
             }
 
             try {
-                // Using the existing addSubscriber which now supports bulk
                 const response = await apiAddSubscriber(newSubscribers);
                 if (showSuccessMessage) showSuccessMessage(response.message || `${newSubscribers.length} subscribers imported successfully/queued for import.`);
-                await loadSubscribers(false); // Refresh list
+                await loadSubscribers(false); 
             } catch (err) {
                 const apiError = err.response?.data;
                 let importErrorMsg = "Failed to import subscribers from CSV.";
@@ -205,7 +197,7 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
                 console.error("CSV Import error:", err.response || err);
             } finally {
                 setIsImporting(false);
-                if(fileInputRef.current) fileInputRef.current.value = ""; // Reset file input
+                if(fileInputRef.current) fileInputRef.current.value = "";
             }
         };
         reader.readAsText(file);
@@ -230,7 +222,7 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
                      <button
                         onClick={handleExportJSON}
                         disabled={subscribers.length === 0 || isLoading || isImporting}
-                        className="sub-list-refresh-btn" // You might want a different style
+                        className="sub-list-refresh-btn" 
                         title="Export current list to JSON"
                     >
                         <Download size={18} />
@@ -247,7 +239,7 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
                     <button
                         onClick={() => fileInputRef.current && fileInputRef.current.click()}
                         disabled={isLoading || isImporting}
-                        className="sub-list-refresh-btn" // Style as needed
+                        className="sub-list-refresh-btn"
                         title="Import subscribers from a CSV file"
                     >
                         <UploadCloud size={18} />
@@ -285,7 +277,7 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
                 </div>
             )}
 
-            {isLoading && subscribers.length === 0 && ( // Initial loading state
+            {isLoading && subscribers.length === 0 && ( // initial loading state
                 <div className="sub-list-loading-container">
                     <RefreshCw size={48} className="sub-list-spinner" />
                     <p className="sub-list-loading-text">Loading subscribers...</p>
@@ -298,7 +290,7 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
                     <p className="sub-list-empty-title">No subscribers found.</p>
                     <p className="sub-list-empty-desc">Try adding some subscribers, importing from CSV, or refreshing the list.</p>
                 </div>
-            ) : subscribers.length > 0 ? ( // Only render table if there are subscribers
+            ) : subscribers.length > 0 ? ( // only render table if there are subscribers
                 <div className="sub-list-table-wrapper">
                     <table className="sub-list-table">
                         <thead className="sub-list-table-head">
@@ -339,14 +331,13 @@ function ViewSubscribersPage({ showSuccessMessage, showErrorMessage }) {
                                         >
                                             <Trash2 size={18} />
                                         </button>
-                                        {/* Add Edit button here if needed later */}
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
-            ) : null} {/* Don't render table structure if loading and empty or error and empty */}
+            ) : null} {/* dont render table structure if loading and empty or error and empty */}
              <p style={{ fontSize: "0.9em", color: "#888", marginTop: 20, textAlign:'center' }}>
                 <em>
                     Note: Campaign Monitor processing may cause delays. Changes may take up to 1 minute to appear.

@@ -23,7 +23,7 @@ function App() {
 
     const handleNavigate = (page) => {
         setCurrentPage(page);
-        setNotification(null); // Clear notification on page change
+        setNotification(null);
     };
 
     const renderPage = () => {

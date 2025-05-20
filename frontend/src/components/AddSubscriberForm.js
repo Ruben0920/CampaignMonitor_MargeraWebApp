@@ -1,7 +1,5 @@
 // src/components/AddSubscriberForm.js
 import React, { useState, useRef } from 'react';
-// Ensure apiAddSubscriber can handle both single objects and arrays for bulk.
-// As per our previous discussion, it should wrap an array payload into { subscribers: [...] }.
 import { addSubscriber as apiAddSubscriber } from '../services/api';
 import { UploadCloud } from 'lucide-react'; // For the import button icon
 

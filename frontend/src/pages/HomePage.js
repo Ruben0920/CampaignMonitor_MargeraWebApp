@@ -7,7 +7,7 @@ function HomePage({onNavigate}) {
                 Welcome to Campaign Monitor List Manager
             </h1>
             <p className="home-intro">
-                Interact with on of your Campaign Monitor mailing lists. View your current subscribers, add new ones, or remove them as needed.
+                Interact with one of your Campaign Monitor mailing lists. View your current subscribers, add new ones, or remove them as needed.
             </p>
             <div className="home-grid">
                 <div className="home-card home-card-indigo">
